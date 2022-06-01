@@ -1,4 +1,8 @@
-load("data/atus.rda")
+library(grDevices)
+library(tidyverse)
+library(plotly)
+library(shiny)
+source("misc/palette_albert.R")
 source("misc/init.R")
 
 ui <- fluidPage(
@@ -12,9 +16,10 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$boxPlot<- renderPlotly({
     ggplot(atus, aes_string(x = input$xcol, y = input$ycol, fill = input$xcol)) +
-      geom_boxplot()+
+      geom_violin(trim = TRUE)+
       theme_bw()+
-      scale_fill_albert()
+      scale_fill_albert()+
+      stat_summary(fun=median, geom="point", size=2, color="red")
   })
 }
 shinyApp(ui, server)
